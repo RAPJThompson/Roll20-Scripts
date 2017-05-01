@@ -7,7 +7,7 @@ on("ready", function(){
     baseChaos=5;
 	ChaosAdj=0;
 	totalChaos = 5;
-	log("Wildsurge Ready.")
+	sendChat("Wildsurge", "/w gm Wildsurge Ready.")
 });
 
 on("chat:message", function(msg) {
@@ -20,25 +20,26 @@ on("chat:message", function(msg) {
         rollOnTable = true;   
   }
   log(msg.content);
-  if(msg.content.indexOf("spell_level") !== -1){
-      log("Is a Spell.")
+  if(isSpell(msg) && msg.content.indexOf("cantrip") == -1){
+      //log("This is a spell and it isn't a cantrip.");
 	  var character = findObjs({_type: "character" , name: msg.who});
 	  if (character.length !== 0){
-	    log("There is a character.");    
 	    character= character[0];
-	    if (getAttrByName(character.id,"class_and_level").indexOf("Sorcerer") !== -1){
-		    log("Found the Sorcerer")
+	    if (getAttrByName(character.id,"class").indexOf("Sorcerer") !== -1){
 		    var randomChanceRoll = randomInteger(100);
-            log("Random chance= " + randomChanceRoll);
+            //log("Random chance= " + randomChanceRoll);
             if(randomChanceRoll <= totalChaos) {
 		        rollOnTable=true;
+		        log("I will roll on the wildsurge table.");
+            } else {
+                log("I will not roll on the wildsurge table.");
             }
 	    }
 	  }
   }
   if(rollOnTable) {
     var randomRoll = randomInteger(100);
-    log("Random = " + randomRoll);
+    //log("Random = " + randomRoll);
     switch(true) {
         case (randomRoll <= 2):
             sendChat(msg.who, "Wild Surge Result: Roll on this table at the start of each of your turns for the next minute, ignoring this result on subsequent rolls.");
@@ -56,7 +57,7 @@ on("chat:message", function(msg) {
             sendChat(msg.who, "Wild Surge Result: You cast magic missile as a 5th-level spell. ");
             break;
         case (randomRoll >= 11 && randomRoll <= 12):
-            sendChat(msg.who, "Wild Surge Result: Roll a d10. Your height changes by a number of inches equal to the roll. If the roll is odd, you shrink. If the roll is even, you grow.");
+            sendChat(msg.who, "Wild Surge Result: Roll a [[d10]]. Your height changes by a number of inches equal to the roll. If the roll is odd, you shrink. If the roll is even, you grow.");
             break;
         case (randomRoll >= 13 && randomRoll <= 14):
             sendChat(msg.who, "Wild Surge Result: You cast confusion centered on yourself. ");
@@ -92,13 +93,13 @@ on("chat:message", function(msg) {
             sendChat(msg.who, "Wild Surge Result: Maximize the damage of the next damaging spell you cast within the next minute. ");
             break;
         case (randomRoll >= 35 && randomRoll <= 36):
-            sendChat(msg.who, "Wild Surge Result: Roll a d10. Your age changes by a number of years equal to the roll. If the roll is odd, you get younger (minimum 1 year old). If the roll is even, you get older.");
+            sendChat(msg.who, "Wild Surge Result: Roll a [[d10]]. Your age changes by a number of years equal to the roll. If the roll is odd, you get younger (minimum 1 year old). If the roll is even, you get older.");
             break;
         case (randomRoll >= 37 && randomRoll <= 38):
-            sendChat(msg.who, "Wild Surge Result: 1d6 flumphs controlled by the Dm appear in unoccupied spaces within 60 feet of you and are frightened of you. They vanish after 1 minute.");
+            sendChat(msg.who, "Wild Surge Result: [[1d6]] flumphs controlled by the Dm appear in unoccupied spaces within 60 feet of you and are frightened of you. They vanish after 1 minute.");
             break;
         case (randomRoll >= 39 && randomRoll <= 40):
-            sendChat(msg.who, "Wild Surge Result: You regain 2d10 hit points. ");
+            sendChat(msg.who, "Wild Surge Result: You regain [[2d10]] hit points. ");
             break;
         case (randomRoll >= 41 && randomRoll <= 42):
             sendChat(msg.who, "Wild Surge Result: You turn into a potted plant until the start of your next turn. While a plant, you are incapacitated and have vulnerability to all damage. If you drop to 0 hit points, your pot breaks, and your form reverts.");
@@ -119,13 +120,13 @@ on("chat:message", function(msg) {
             sendChat(msg.who, "Wild Surge Result: A spectral shield hovers near you for the next minute, granting you a +2 bonus to AC and immunity to magic missile.");
             break;
         case (randomRoll >= 53 && randomRoll <= 54):
-            sendChat(msg.who, "Wild Surge Result: You are immune to being intoxicated by alcohol for the next 5d6 days.");
+            sendChat(msg.who, "Wild Surge Result: You are immune to being intoxicated by alcohol for the next [[5d6]] days.");
             break;
         case (randomRoll >= 55 && randomRoll <= 56):
             sendChat(msg.who, "Wild Surge Result: Your hair falls out but grows back within 24 hours.");
             break;
         case (randomRoll >= 57 && randomRoll <= 58):
-            sendChat(msg.who, "Wild Surge Result: or the next minute, any flammable object you touch that isn’t being worn or carried by another creature bursts into flame.");
+            sendChat(msg.who, "Wild Surge Result: For the next minute, any flammable object you touch that isn’t being worn or carried by another creature bursts into flame.");
             break;
         case (randomRoll >= 59 && randomRoll <= 60):
             sendChat(msg.who, "Wild Surge Result: You regain your lowest-level expended spell slot.");
@@ -137,7 +138,7 @@ on("chat:message", function(msg) {
             sendChat(msg.who, "Wild Surge Result: You cast fog cloud centered on yourself.");
             break;
         case (randomRoll >= 65 && randomRoll <= 66):
-            sendChat(msg.who, "Wild Surge Result: Up to three creatures you choose within 30 feet of you take 4d10 lightning damage.");
+            sendChat(msg.who, "Wild Surge Result: Up to three creatures you choose within 30 feet of you take [[4d10]] lightning damage.");
             break;
         case (randomRoll >= 67 && randomRoll <= 68):
             sendChat(msg.who, "Wild Surge Result: You are frightened by the nearest creature until the end of your next turn.");
@@ -149,7 +150,7 @@ on("chat:message", function(msg) {
             sendChat(msg.who, "Wild Surge Result: You gain resistance to all damage for the next minute.");
             break;
         case (randomRoll >= 73 && randomRoll <= 74):
-            sendChat(msg.who, "Wild Surge Result: A random creature within 60 feet of you becomes poisoned for 1d4 hours.");
+            sendChat(msg.who, "Wild Surge Result: A random creature within 60 feet of you becomes poisoned for [[1d4]] hours.");
             break;
         case (randomRoll >= 75 && randomRoll <= 76):
             sendChat(msg.who, "Wild Surge Result: You glow with bright light in a 30-foot radius for the next minute. Any creature that ends its turn within 5 feet of you is blinded until the end of its next turn.");
@@ -164,7 +165,7 @@ on("chat:message", function(msg) {
             sendChat(msg.who, "Wild Surge Result: You can take one additional action immediately.");
             break;
         case (randomRoll >= 83 && randomRoll <= 84):
-            sendChat(msg.who, "Wild Surge Result: Each creature within 30 feet of you takes 1d10 necrotic damage. You regain hit points equal to the sum of the necrotic damage dealt.");
+            sendChat(msg.who, "Wild Surge Result: Each creature within 30 feet of you takes [[1d10]] necrotic damage. You regain hit points equal to the sum of the necrotic damage dealt.");
             break;
         case (randomRoll >= 85 && randomRoll <= 86):
             sendChat(msg.who, "Wild Surge Result: You cast mirror image.");
@@ -178,14 +179,14 @@ on("chat:message", function(msg) {
         case (randomRoll >= 91 && randomRoll <= 92):
             sendChat(msg.who, "Wild Surge Result: If you die within the next minute, you immediately come back to life as if by the reincarnate spell.");
             break;
-        case (randomRoll >= 93 && randomRoll <= 44):
+        case (randomRoll >= 93 && randomRoll <= 94):
             sendChat(msg.who, "Wild Surge Result: Your size increases by one size category for the next minute.");
             break;
         case (randomRoll >= 95 && randomRoll <= 96):
             sendChat(msg.who, "Wild Surge Result: You and all creatures within 30 feet of you gain vulnerability to piercing damage for the next minute.");
             break;
         case (randomRoll >= 97 && randomRoll <= 98):
-            sendChat(msg.who, "Wild Surge Result: You are surrounded by faint, ethereal music for the For the next minute.");
+            sendChat(msg.who, "Wild Surge Result: You are surrounded by faint, ethereal music for the next minute.");
             break;
         case (randomRoll >= 99 && randomRoll <= 100):
             sendChat(msg.who, "Wild Surge Result: You regain all expended sorcery points.");
@@ -196,3 +197,38 @@ on("chat:message", function(msg) {
 	rollOnTable = false;
   }
 });
+
+
+function isSpell(msg){
+    //log("Check for Spell");
+    isSpellBoolean = false;
+    switch(true) {
+        case (msg.content.indexOf("abjuration") !== -1):
+            isSpellBoolean = true;
+            break;
+        case (msg.content.indexOf("conjuration") !== -1):
+            isSpellBoolean = true;
+            break;
+        case (msg.content.indexOf("divination") !== -1):
+            isSpellBoolean = true;
+            break;
+        case (msg.content.indexOf("enchantment") !== -1):
+            isSpellBoolean = true;
+            break;
+        case (msg.content.indexOf("evocation") !== -1):
+            isSpellBoolean = true;
+            break;
+        case (msg.content.indexOf("illusion") !== -1):
+            isSpellBoolean = true;
+            break;
+        case (msg.content.indexOf("necromancy") !== -1):
+            isSpellBoolean = true;
+            break;
+        case (msg.content.indexOf("transmutation") !== -1):
+            isSpellBoolean = true;
+            break;
+    default:
+        break;
+    }
+    return isSpellBoolean;
+}
